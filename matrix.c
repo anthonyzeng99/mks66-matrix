@@ -12,6 +12,17 @@ Returns:
 print the matrix
 */
 void print_matrix(struct matrix *m) {
+
+  int r, c;
+  
+  for (r=0; r < m->rows; r++) {
+    printf("\n");
+    for (c=0; c < m->cols; c++) {
+      printf("%d ", (int) m->m[r][c]); 
+    }
+  }
+  printf("\n\n");
+  
 }
 
 /*-------------- void ident() --------------
@@ -21,6 +32,18 @@ Returns:
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
+
+  int r, c;
+
+  for (r=0; r < m->rows; r++) {
+    for (c=0; c < m->cols; c++) {
+      if (r == c) {
+	m->m[r][c] = 1;
+      }	else {
+	m->m[r][c] = 0;
+      }
+    }
+  }
 }
 
 
@@ -32,6 +55,11 @@ Returns:
 multiply each element of m by x
 */
 void scalar_mult(double x, struct matrix *m) {
+  int r, c;
+  
+  for (r=0; r < m->rows; r++)
+    for (c=0; c < m->cols; c++)
+      m->m[r][c] *= x;    
 }
 
 
@@ -43,6 +71,25 @@ Returns:
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
+
+  struct matrix *result;
+  result = new_matrix(b -> rows, b -> cols);
+
+  int r,c,i;
+
+  for (r=0; r < a->rows; r++) {
+    for (c=0; c < b->cols; c++) {
+      double dot_product = 0.0;
+      for (i=0; i < a->cols; i++) {	
+	dot_product += a->m[r][i] * b->m[i][c];
+      }
+      result->m[r][c] = dot_product;  
+    }
+  }
+
+  copy_matrix(result,b);
+  free_matrix(result);
+  
 }
 
 
